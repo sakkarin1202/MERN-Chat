@@ -84,8 +84,8 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
-    // const userId = req.user._id;
-    const { id: userId } = req.params;
+    const userId = req.user._id;
+    // const { id: userId } = req.params;
 
     if (!profilePic) {
       return res.status(400).json({ message: "Profile picture is required" });
@@ -108,5 +108,15 @@ export const updateProfile = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: "Internal server error While Updating" });
+  }
+};
+
+export const checkAuth = async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error While checking Auth" });
   }
 };
