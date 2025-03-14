@@ -54,16 +54,19 @@ export const acceptFriendRequest = async (req, res) => {
 
     if (!friend) return res.status(404).json({ message: "Friend not found" });
 
-    if (!user.friendRequests.includes(friendId))
-      return res
-        .status(404)
-        .json({ message: "No friend request from this user" });
-
-    user.friends.push(friendId);
-    friend.friends.push(userId);
-    await user.save();
-    await friend.save();
-    return res.status(200).json({ message: "friend request accepted" });
+    if (user.friendRequests.includes(friendId)) {
+      user.friends.push(friendId);
+      friend.friends.push(userId);
+      user.friendRequests = user.friendRequests.filter(
+        (id) => friendId !== id.toString()
+      );
+      friend.friendRequests = friend.friendRequests.filter(
+        (id) => userId !== id.toString()
+      );
+      await user.save();
+      await friend.save();
+      return res.status(200).json({ message: "Friend request accepted" });
+    }
   } catch (error) {
     res
       .status(500)
