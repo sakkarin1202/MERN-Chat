@@ -4,7 +4,7 @@ import { Schema } from "mongoose";
 
 const messageSchema = new Schema(
   {
-    senderID: {
+    senderId: {
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true,
@@ -16,7 +16,7 @@ const messageSchema = new Schema(
     text: {
       type: String,
     },
-    Image: {
+    image: {
       type: String,
     },
   },

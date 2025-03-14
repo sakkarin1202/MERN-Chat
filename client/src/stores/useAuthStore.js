@@ -2,6 +2,7 @@ import { create } from "zustand";
 import api from "../services/api.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
+import { useChatStore } from "./useChatStore.js";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -86,6 +87,26 @@ export const useAuthStore = create((set, get) => ({
     set({ socket: newSocket });
     newSocket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
+    });
+    newSocket.on("friendRequestReceived", (friendId) => {
+      const selectedUser = useChatStore.getState().selectedUser;
+      if (friendId === selectedUser._id) {
+        useChatStore.getState().setFriendRequestReceived(true);
+      }
+    });
+    newSocket.on("friendRequestSent", (friendId) => {
+      const selectedUser = useChatStore.getState().selectedUser;
+      if (friendId === selectedUser._id) {
+        useChatStore.getState().setFriendRequestReceived(false);
+      }
+    });
+    newSocket.on("friendRequestAccepted", (friendId) => {
+      const selectedUser = useChatStore.getState().selectedUser;
+      if (friendId === selectedUser._id) {
+        useChatStore.getState().setFriendRequestReceived(false);
+        useChatStore.getState().setFriendRequestSent(false);
+        useChatStore.getState().setIsFriend(true);
+      }
     });
   },
 
