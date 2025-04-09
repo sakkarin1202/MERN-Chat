@@ -18,21 +18,7 @@ const PORT = process.env.PORT;
 //   console.log("DB Connection Failed");
 // }
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://mern-chat-sable.vercel.app", 
-];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      console.log(" Blocked Origin:", origin);  
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-}));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(
   express.json({
     limit: "50mb",
